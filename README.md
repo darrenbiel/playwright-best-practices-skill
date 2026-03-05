@@ -28,25 +28,25 @@ Key changes:
 - **Modified** 6 reference files with Skyline-specific notes and examples
 - **Rewrote** `SKILL.md` with updated activity tables and decision tree
 
-## Integration with Skyline2
+## Integration with Skyline
 
-This repo is embedded in the Skyline2 monorepo as a **git subtree** at:
+This repo is embedded in the Skyline monorepo as a **git subtree** at:
 
 ```
 .github/skills/skyline-playwright-best-practices/
 ```
 
-The `skyline-customization` branch is the source of truth.
+This repo's `skyline-customization` branch is the source of truth.
 
 ## Contributing
 
 ### Source of truth
 
-The **fork** (this repo, branch `skyline-customization`) is the source of truth. Make edits here, then sync to Skyline2.
+This fork repo (branch `skyline-customization`) is the source of truth. Make edits here, then sync to Skyline.
 
-### Making changes
+### Making changes (in this fork)
 
-1. Clone this repo and check out the `skyline-customization` branch:
+1. Clone this fork and check out the `skyline-customization` branch:
    ```bash
    git clone https://github.com/darrenbiel/playwright-best-practices-skill.git
    cd playwright-best-practices-skill
@@ -62,17 +62,17 @@ The **fork** (this repo, branch `skyline-customization`) is the source of truth.
    git push origin skyline-customization
    ```
 
-4. Sync to Skyline2 by running this from the Skyline2 repo root:
+4. Sync to Skyline by running this from the Skyline repo root:
    ```bash
    git subtree pull --prefix=.github/skills/skyline-playwright-best-practices \
      https://github.com/darrenbiel/playwright-best-practices-skill.git \
      skyline-customization --squash
    ```
-   This creates a merge commit in Skyline2 with the latest fork content.
+   This creates a merge commit in Skyline with the latest fork content.
 
-### Quick fixes directly in Skyline2
+### Quick fixes directly in Skyline
 
-If you need to make a quick fix directly in the monorepo, edit the files under `.github/skills/skyline-playwright-best-practices/` and commit normally. To push changes back to the fork:
+If you need to make a quick fix directly in the Skyline monorepo, edit the files under `.github/skills/skyline-playwright-best-practices/` and commit normally. To push those changes back to this fork:
 
 ```bash
 git subtree push --prefix=.github/skills/skyline-playwright-best-practices \
@@ -80,7 +80,7 @@ git subtree push --prefix=.github/skills/skyline-playwright-best-practices \
   skyline-customization
 ```
 
-> **Note:** `subtree push` walks the full Skyline2 history to extract changes, which can be slow. Prefer making changes in the fork when possible.
+> **Note:** `subtree push` walks the full Skyline history to extract changes, which can be slow. Prefer making changes in the fork when possible.
 
 ### Important guidelines
 
