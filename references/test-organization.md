@@ -1,24 +1,20 @@
 # Test Organization
 
+> **Skyline-specific**: See [skyline-conventions.md](skyline-conventions.md) for codebase-specific file naming, config patterns, test import requirements, and directory layout conventions that take precedence over generic guidance below.
+
 ## Table of Contents
 
 1. [Configuration](#configuration)
 2. [E2E Tests](#e2e-tests)
-3. [Component Tests](#component-tests)
-4. [API Tests](#api-tests)
-5. [Visual Regression Tests](#visual-regression-tests)
-6. [Directory Structure](#directory-structure)
-7. [Tagging & Filtering](#tagging--filtering)
-
-### Project Setup
-
-```bash
-npm init playwright@latest
-```
+3. [API Tests](#api-tests)
+4. [Directory Structure](#directory-structure)
+5. [Tagging & Filtering](#tagging--filtering)
 
 ## Configuration
 
 ### Essential Configuration
+
+> **Skyline note**: The Skyline codebase does NOT use `fullyParallel: true` or `webServer` in Playwright configs. End2EndTests run against a deployed environment. Web acceptance tests use a separate fake API server started independently. See [skyline-conventions.md](skyline-conventions.md) for actual config patterns.
 
 ```typescript
 // playwright.config.ts
@@ -26,29 +22,21 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests",
-  fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: [["html"], ["list"]],
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: process.env.BASE_URL || "http://localhost:3000",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
   projects: [
-    { name: "setup", testMatch: /.*\.setup\.ts/ },
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
-      dependencies: ["setup"],
     },
   ],
-  webServer: {
-    command: "npm run dev",
-    url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
-  },
 });
 ```
 
@@ -107,16 +95,6 @@ test.describe("Checkout Flow", () => {
 - Keep tests independent
 - Use realistic data
 - Clean up test data in teardown
-
-## Component Tests
-
-Test individual components in isolation using Playwright Component Testing.
-
-```bash
-npm init playwright@latest -- --ct
-```
-
-For comprehensive component testing patterns including mounting, props, events, slots, mocking, and framework-specific examples (React, Vue, Svelte), see **[component-testing.md](component-testing.md)**.
 
 ## API Tests
 
@@ -181,112 +159,9 @@ test("handles slow API", async ({ page }) => {
 
 For advanced patterns (GraphQL mocking, HAR recording, request modification, network throttling), see **[network-advanced.md](network-advanced.md)**.
 
-## Visual Regression Tests
-
-Compare screenshots to detect visual changes.
-
-### Basic Visual Test
-
-```typescript
-// tests/visual/homepage.spec.ts
-import { test, expect } from "@playwright/test";
-
-test("homepage visual", async ({ page }) => {
-  await page.goto("/");
-  await expect(page).toHaveScreenshot("homepage.png");
-});
-
-test("component visual", async ({ page }) => {
-  await page.goto("/components");
-
-  const button = page.getByRole("button", { name: "Primary" });
-  await expect(button).toHaveScreenshot("primary-button.png");
-});
-```
-
-### Visual Test Options
-
-```typescript
-test("dashboard visual", async ({ page }) => {
-  await page.goto("/dashboard");
-
-  await expect(page).toHaveScreenshot("dashboard.png", {
-    fullPage: true, // Capture entire scrollable page
-    maxDiffPixels: 100, // Allow up to 100 different pixels
-    maxDiffPixelRatio: 0.01, // Or 1% difference
-    threshold: 0.2, // Pixel comparison threshold
-    animations: "disabled", // Disable animations
-    mask: [page.getByTestId("date")], // Mask dynamic content
-  });
-});
-```
-
-### Handling Dynamic Content
-
-```typescript
-test("page with dynamic content", async ({ page }) => {
-  await page.goto("/profile");
-
-  // Mask elements that change
-  await expect(page).toHaveScreenshot("profile.png", {
-    mask: [
-      page.getByTestId("timestamp"),
-      page.getByTestId("avatar"),
-      page.getByRole("img"),
-    ],
-  });
-});
-
-// Or hide elements via CSS
-test("page hiding dynamic elements", async ({ page }) => {
-  await page.goto("/profile");
-
-  await page.addStyleTag({
-    content: `
-      .dynamic-content { visibility: hidden !important; }
-      [data-testid="ad-banner"] { display: none !important; }
-    `,
-  });
-
-  await expect(page).toHaveScreenshot("profile-stable.png");
-});
-```
-
-### Visual Test Configuration
-
-```typescript
-// playwright.config.ts
-export default defineConfig({
-  expect: {
-    toHaveScreenshot: {
-      maxDiffPixels: 50,
-      animations: "disabled",
-    },
-  },
-  projects: [
-    {
-      name: "visual-chrome",
-      use: {
-        ...devices["Desktop Chrome"],
-        viewport: { width: 1280, height: 720 },
-      },
-      testMatch: /.*visual.*\.spec\.ts/,
-    },
-  ],
-});
-```
-
-### Update Snapshots
-
-```bash
-# Update all snapshots
-npx playwright test --update-snapshots
-
-# Update specific test
-npx playwright test homepage.spec.ts --update-snapshots
-```
-
 ## Directory Structure
+
+### Generic Structure
 
 ```
 tests/
@@ -294,14 +169,9 @@ tests/
 │   ├── auth.spec.ts
 │   ├── checkout.spec.ts
 │   └── dashboard.spec.ts
-├── component/              # Component tests
-│   ├── Button.spec.tsx
-│   └── Modal.spec.tsx
 ├── api/                    # API tests
 │   ├── users.spec.ts
 │   └── products.spec.ts
-├── visual/                 # Visual regression tests
-│   └── homepage.spec.ts
 ├── fixtures/               # Custom fixtures
 │   ├── auth.fixture.ts
 │   └── api.fixture.ts
@@ -309,6 +179,8 @@ tests/
     ├── login.page.ts
     └── dashboard.page.ts
 ```
+
+> **Skyline note**: See [skyline-conventions.md](skyline-conventions.md) for actual Skyline directory layouts (End2EndTests tests/smoke + tests/userjourney, and per-app acceptance-tests/).
 
 ## Anti-Patterns to Avoid
 
@@ -320,10 +192,10 @@ tests/
 
 ## Related References
 
-- **Component Testing**: See [component-testing.md](component-testing.md) for comprehensive CT patterns
 - **Projects**: See [projects-dependencies.md](projects-dependencies.md) for project-based filtering
 - **Page Objects**: See [page-object-model.md](page-object-model.md) for organizing page interactions
 - **Test Data**: See [fixtures-hooks.md](fixtures-hooks.md) for managing test data
+- **Skyline Conventions**: See [skyline-conventions.md](skyline-conventions.md) for codebase-specific patterns
 
 ## Tagging & Filtering
 
@@ -344,6 +216,22 @@ test.describe("API tests @api", () => {
   });
 });
 ```
+
+### Skyline: ProductAreaTags
+
+In the Skyline End2EndTests, tests are organized by product area using the `ProductAreaTags` enum. This is used alongside Playwright projects (smoke, userjourney) to categorize tests:
+
+```typescript
+import { ProductAreaTags } from '../shared/product-area-tags.js';
+
+test.describe(`${ProductAreaTags.AssetManagement} Asset page`, () => {
+  test('should display asset list', async ({ page }) => {
+    // ...
+  });
+});
+```
+
+See [skyline-conventions.md](skyline-conventions.md) for the full list of product area tags and filtering conventions.
 
 ### Running Tagged Tests
 
