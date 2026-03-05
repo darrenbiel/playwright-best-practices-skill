@@ -12,7 +12,7 @@ The original skill provides comprehensive Playwright guidance covering many plat
 
 ---
 
-## Commit 1: Delete 11 Irrelevant Reference Files
+## Commit 1: Delete 12 Irrelevant Reference Files
 
 **Files removed:**
 
@@ -28,6 +28,7 @@ The original skill provides comprehensive Playwright guidance covering many plat
 | `security-testing.md` | No XSS/CSRF/auth security testing via Playwright. Security is handled by separate tooling (Snyk, etc.). |
 | `test-coverage.md` | No Istanbul/V8 code coverage instrumentation in Playwright tests. |
 | `websockets.md` | No WebSocket testing patterns in the codebase. |
+| `ci-cd.md` | Skyline uses Azure DevOps pipelines, not GitHub Actions. The file was mostly GitHub Actions YAML examples that don't apply. CI-relevant patterns (Docker, sharding, env vars) are covered in `performance.md` and `skyline-conventions.md`. |
 | `i18n.md` | No internationalization/localization testing via Playwright. |
 
 ## Commit 2: Create skyline-conventions.md

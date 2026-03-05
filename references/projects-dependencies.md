@@ -450,4 +450,4 @@ teardown("cleanup", async ({ request }) => {
 
 - **Global Setup**: See [global-setup.md](global-setup.md) for globalSetup vs setup projects
 - **Fixtures**: See [fixtures-hooks.md](fixtures-hooks.md) for authentication patterns
-- **CI/CD**: See [ci-cd.md](ci-cd.md) for running projects in CI
+- **Skyline conventions**: See [skyline-conventions.md](skyline-conventions.md) for codebase CI patterns

@@ -430,5 +430,4 @@ async function globalSetup() {
 ## Related References
 
 - **Fixtures & Auth**: See [fixtures-hooks.md](fixtures-hooks.md) for worker-scoped fixtures and auth patterns
-- **CI/CD**: See [ci-cd.md](ci-cd.md) for CI setup patterns
 - **Projects**: See [projects-dependencies.md](projects-dependencies.md) for project configuration

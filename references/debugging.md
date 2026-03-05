@@ -139,7 +139,7 @@ If a test fails intermittently, it's likely flaky. Quick checks:
 | Fails only with multiple workers       | Flaky - parallelism/isolation | [flaky-tests.md](flaky-tests.md)       |
 | Fails only in CI                       | Environment difference        | [CI Debugging](#debugging-in-ci) below |
 | Always fails                           | Bug in test or app            | Debug with tools above                 |
-| Always passes locally, always fails CI | CI-specific issue             | [ci-cd.md](ci-cd.md)                   |
+| Always passes locally, always fails CI | CI-specific issue             | [skyline-conventions.md](skyline-conventions.md) |
 
 > **For flaky test detection commands, root cause analysis, and fixing strategies**, see [flaky-tests.md](flaky-tests.md).
 
@@ -440,7 +440,7 @@ test("with attachments", async ({ page }, testInfo) => {
 | **Element not found**                         | Wrong selector, element not visible, in iframe, timing issue | Check locator with Inspector, wait for visibility, use frameLocator | [locators.md](locators.md), [assertions-waiting.md](assertions-waiting.md) |
 | **Timeout errors**                            | Slow network, heavy page load, waiting for wrong condition   | Increase timeout, wait for specific response, check network tab     | [assertions-waiting.md](assertions-waiting.md)                             |
 | **Flaky tests**                               | Race conditions, shared state, timing dependencies           | See comprehensive flaky test guide                                  | [flaky-tests.md](flaky-tests.md)                                           |
-| **Tests pass locally, fail in CI**            | Environment differences, missing dependencies, timing        | Simulate CI locally, check CI logs, verify environment vars         | [ci-cd.md](ci-cd.md), [flaky-tests.md](flaky-tests.md)                     |
+| **Tests pass locally, fail in CI**            | Environment differences, missing dependencies, timing        | Simulate CI locally, check CI logs, verify environment vars         | [flaky-tests.md](flaky-tests.md)                                           |
 | **Slow test execution**                       | Not parallelized, heavy network calls, unnecessary waits     | Enable parallelization, mock APIs, optimize waits                   | [performance.md](performance.md)                                           |
 | **Selector works in browser but not in test** | Element not attached, wrong context, dynamic content         | Use auto-waiting, check iframe, verify element state                | [locators.md](locators.md)                                                 |
 | **Test fails on retry**                       | Non-deterministic data, external dependencies                | Use test data fixtures, mock external services                      | [fixtures-hooks.md](fixtures-hooks.md)                                     |
@@ -501,4 +501,4 @@ test("with attachments", async ({ page }, testInfo) => {
 - **Locator issues**: See [locators.md](locators.md) for selector strategies
 - **Waiting problems**: See [assertions-waiting.md](assertions-waiting.md) for waiting patterns
 - **Test isolation**: See [fixtures-hooks.md](fixtures-hooks.md) for fixtures and isolation
-- **CI issues**: See [ci-cd.md](ci-cd.md) for CI configuration
+- **CI issues**: See [skyline-conventions.md](skyline-conventions.md) for CI patterns

@@ -111,7 +111,7 @@ Consult these references based on what you're doing:
 | Activity                                | Reference Files                                                                                                                                                       |
 | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Configuring Playwright project**      | [skyline-conventions.md](references/skyline-conventions.md), [test-organization.md](references/test-organization.md), [projects-dependencies.md](references/projects-dependencies.md) |
-| **Setting up CI/CD pipelines**          | [ci-cd.md](references/ci-cd.md), [performance.md](references/performance.md)                                                                                          |
+| **Setting up CI/CD pipelines**          | [skyline-conventions.md](references/skyline-conventions.md), [performance.md](references/performance.md)                                                                               |
 | **Global setup & teardown**             | [global-setup.md](references/global-setup.md)                                                                                                                         |
 | **Project dependencies**                | [projects-dependencies.md](references/projects-dependencies.md)                                                                                                       |
 | **Optimizing test performance**         | [performance.md](references/performance.md), [test-organization.md](references/test-organization.md)                                                                  |
@@ -177,7 +177,7 @@ What are you doing?
 │  └─ Creating data factories → test-data.md
 │
 ├─ Setting up infrastructure?
-│  ├─ CI/CD → ci-cd.md
+│  ├─ CI/CD → skyline-conventions.md, performance.md
 │  ├─ Global setup/teardown → global-setup.md
 │  ├─ Project dependencies → projects-dependencies.md
 │  ├─ Test performance → performance.md

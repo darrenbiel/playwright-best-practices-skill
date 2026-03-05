@@ -120,7 +120,7 @@ jobs:
       - run: npx playwright test --shard=${{ matrix.shard }}/4
 ```
 
-> **For comprehensive CI sharding** (blob reports, merging sharded results, full workflows), see [ci-cd.md](ci-cd.md#sharding).
+> **For comprehensive CI sharding** (blob reports, merging sharded results, full workflows), consult your CI platform documentation.
 
 ## Test Optimization
 
@@ -448,6 +448,5 @@ test("lighthouse audit", async ({ page }) => {
 
 ## Related References
 
-- **CI/CD sharding**: See [ci-cd.md](ci-cd.md) for CI configuration
 - **Test organization**: See [test-organization.md](test-organization.md) for structuring tests
 - **Fixtures for reuse**: See [fixtures-hooks.md](fixtures-hooks.md) for authentication patterns
