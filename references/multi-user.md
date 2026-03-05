@@ -390,4 +390,3 @@ test("chat messages sync between users", async ({ browser }) => {
 ## Related References
 
 - **Authentication**: See [fixtures-hooks.md](fixtures-hooks.md) for auth setup
-- **WebSockets**: See [websockets.md](websockets.md) for real-time mocking

@@ -203,36 +203,19 @@ test("find slow requests", async ({ page }) => {
 
 ## Debugging in CI
 
-### Simulate CI Locally
+> **Skyline note**: Skyline E2E tests run against deployed environments via Azure DevOps pipelines (not GitHub Actions). For Skyline-specific CI config (retries, trace, workers, projects), see [skyline-conventions.md](skyline-conventions.md). The patterns below are useful for local reproduction of CI-like conditions.
+
+### Reproduce CI Failures Locally
 
 ```bash
-# Run in headless mode like CI
-CI=true npx playwright test
+# Run in headless mode (matching CI)
+npx playwright test --headed=false
 
-# Match CI browser versions
-npx playwright install --with-deps
+# Repeat to expose intermittent failures
+npx playwright test tests/failing.spec.ts --repeat-each=10
 
-# Run in Docker (same as CI)
-docker run --rm -v $(pwd):/work -w /work \
-  mcr.microsoft.com/playwright:v1.40.0-jammy \
-  npx playwright test
-```
-
-### CI-Specific Configuration
-
-```typescript
-// playwright.config.ts
-export default defineConfig({
-  // More artifacts in CI for debugging
-  use: {
-    trace: process.env.CI ? "on-first-retry" : "off",
-    video: process.env.CI ? "retain-on-failure" : "off",
-    screenshot: process.env.CI ? "only-on-failure" : "off",
-  },
-
-  // More retries in CI (but investigate failures!)
-  retries: process.env.CI ? 2 : 0,
-});
+# Run with single worker to isolate parallelism issues
+npx playwright test --workers=1
 ```
 
 ### Debug CI Environment
@@ -243,7 +226,6 @@ test("CI environment check", async ({ page }, testInfo) => {
   console.log("Project:", testInfo.project.name);
   console.log("Worker:", testInfo.workerIndex);
   console.log("Retry:", testInfo.retry);
-  console.log("Base URL:", testInfo.project.use.baseURL);
 
   // Check viewport
   const viewport = page.viewportSize();

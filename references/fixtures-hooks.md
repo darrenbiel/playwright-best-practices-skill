@@ -20,7 +20,7 @@ test("example", async ({
   page, // Isolated page instance
   context, // Browser context (cookies, localStorage)
   browser, // Browser instance
-  browserName, // 'chromium', 'firefox', or 'webkit'
+  browserName, // 'chromium' (Skyline is Chromium-only)
   request, // API request context
 }) => {
   // Each test gets fresh instances

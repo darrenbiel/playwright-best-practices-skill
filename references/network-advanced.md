@@ -399,7 +399,6 @@ Use `context.setOffline(true/false)` to simulate network connectivity changes.
 > **For comprehensive offline testing patterns:**
 >
 > - **Network failure simulation** (error recovery, graceful degradation): See [error-testing.md](error-testing.md#offline-testing)
-> - **Offline-first/PWA testing** (service workers, caching, background sync): See [service-workers.md](service-workers.md#offline-testing)
 
 ### Network Throttling Fixture
 
@@ -449,4 +448,3 @@ export const test = base.extend<NetworkFixtures>({
 ## Related References
 
 - **Basic Mocking**: See [test-organization.md](test-organization.md) for simple mocking
-- **WebSockets**: See [websockets.md](websockets.md) for real-time mocking

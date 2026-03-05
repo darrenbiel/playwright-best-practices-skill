@@ -318,7 +318,7 @@ export default globalSetup;
 ### Setup Project Pattern
 
 ```typescript
-// playwright.config.ts
+// playwright.config.ts — Skyline uses test-type projects, not browser projects
 export default defineConfig({
   projects: [
     // Setup project
@@ -328,13 +328,13 @@ export default defineConfig({
     },
     // Test projects depend on setup
     {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      name: "smoke",
+      testMatch: ["tests/smoke/**/*test.ts"],
       dependencies: ["setup"],
     },
     {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
+      name: "userjourney",
+      testMatch: ["tests/userjourney/**/*test.ts"],
       dependencies: ["setup"],
     },
   ],

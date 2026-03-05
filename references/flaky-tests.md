@@ -60,10 +60,11 @@ CI=true npx playwright test --repeat-each=10
 
 ```typescript
 // playwright.config.ts - Enable artifacts for flaky test investigation
+// Skyline uses retries: 1 and trace: 'retain-on-failure' — see skyline-conventions.md
 export default defineConfig({
-  retries: process.env.CI ? 2 : 0,
+  retries: 1,
   use: {
-    trace: "on-first-retry", // Capture trace on retry
+    trace: "retain-on-failure",
     video: "retain-on-failure",
     screenshot: "only-on-failure",
   },
@@ -330,19 +331,17 @@ export const test = base.extend<{ tempFile: string }>({
 ### Simulating CI Locally
 
 ```bash
-# Run headless with CI environment variable
-CI=true npx playwright test
+# Run in headless mode (matching CI)
+npx playwright test --headed=false
 
-# Limit CPU (Linux/Mac)
-cpulimit -l 50 -- npx playwright test
+# Repeat to expose intermittent failures
+npx playwright test tests/flaky.spec.ts --repeat-each=20
 
-# Run in Docker matching CI environment
-docker run -it --rm \
-  -v $(pwd):/work \
-  -w /work \
-  mcr.microsoft.com/playwright:v1.40.0-jammy \
-  npx playwright test
+# Run with single worker to isolate parallelism issues
+npx playwright test --workers=1
 ```
+
+> **Skyline note**: Skyline CI runs in Docker containers via Azure DevOps pipelines. See [skyline-conventions.md](skyline-conventions.md) for the actual config (retries, workers, trace settings).
 
 ### Consistent Viewport and Scale
 
@@ -466,8 +465,9 @@ await expect(page.locator(".items")).toHaveCount(5);
 
 ```typescript
 // playwright.config.ts - Limit retries to avoid masking issues
+// Skyline uses retries: 1 always (same local and CI) — see skyline-conventions.md
 export default defineConfig({
-  retries: process.env.CI ? 2 : 0, // Only retry in CI
+  retries: 1,
   expect: {
     timeout: 10000, // Reasonable assertion timeout
   },

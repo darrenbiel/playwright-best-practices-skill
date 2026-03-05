@@ -17,15 +17,11 @@
 ```typescript
 // playwright.config.ts
 export default defineConfig({
-  // Run test files in parallel
-  fullyParallel: true,
+  // Skyline does NOT use fullyParallel — tests run file-by-file.
+  // See skyline-conventions.md for actual config.
 
   // Number of worker processes
-  workers: process.env.CI ? 1 : undefined, // undefined = half CPU cores
-
-  // Or explicit count
-  // workers: 4,
-  // workers: '50%', // Percentage of CPU cores
+  workers: 2, // Smoke tests use 2; user journey tests use 1
 });
 ```
 
@@ -61,13 +57,14 @@ test.describe.serial("Serial Tests", () => {
 
 ### Parallel Projects
 
+> **Skyline note**: Skyline is Chromium-only. Projects are by test type (smoke/userjourney), not by browser. See [skyline-conventions.md](skyline-conventions.md).
+
 ```typescript
-// playwright.config.ts
+// playwright.config.ts — Skyline project structure
 export default defineConfig({
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "firefox", use: { ...devices["Desktop Firefox"] } },
-    { name: "webkit", use: { ...devices["Desktop Safari"] } },
+    { name: "smoke", testMatch: ["tests/smoke/**/*test.ts"] },
+    { name: "userjourney", testMatch: ["tests/userjourney/**/*test.ts"] },
   ],
 });
 ```
@@ -77,7 +74,7 @@ export default defineConfig({
 npx playwright test
 
 # Run specific project
-npx playwright test --project=chromium
+npx playwright test --project=smoke
 ```
 
 ## Sharding
@@ -104,23 +101,18 @@ npx playwright test --shard=4/4
 Tests are distributed evenly by file. For optimal sharding:
 
 - Keep test files similar in size
-- Use `fullyParallel: true` for even distribution
 - Balance slow tests across files
 
-### CI Sharding Pattern
+### CI Sharding
 
-```yaml
-# GitHub Actions
-jobs:
-  test:
-    strategy:
-      matrix:
-        shard: [1, 2, 3, 4]
-    steps:
-      - run: npx playwright test --shard=${{ matrix.shard }}/4
+```bash
+# Split tests across machines (example: 4 shards)
+npx playwright test --shard=1/4
+npx playwright test --shard=2/4
+# etc.
 ```
 
-> **For comprehensive CI sharding** (blob reports, merging sharded results, full workflows), consult your CI platform documentation.
+> **Skyline note**: Skyline CI uses Azure DevOps pipelines, not GitHub Actions. Configure sharding in your pipeline YAML using the `--shard` flag.
 
 ## Test Optimization
 
@@ -437,7 +429,6 @@ test("lighthouse audit", async ({ page }) => {
 
 | Optimization                   | Impact     |
 | ------------------------------ | ---------- |
-| Enable `fullyParallel`         | High       |
 | Reuse authentication           | High       |
 | Mock heavy APIs                | High       |
 | Block tracking scripts         | Medium     |

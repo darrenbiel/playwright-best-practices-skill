@@ -30,14 +30,10 @@ test("payment flow", async ({ page }) => {
 
 ### Conditional Skip
 
+> **Skyline note**: The codebase is Chromium-only, so browser-specific skips (`browserName === "webkit"`, etc.) are not applicable. The examples below show the general API; in Skyline, use environment or platform conditions instead.
+
 ```typescript
-test("webkit-specific feature", async ({ page, browserName }) => {
-  test.skip(browserName !== "webkit", "This feature only works in WebKit");
-
-  await page.goto("/webkit-feature");
-});
-
-test("production only", async ({ page }) => {
+test("environment-specific feature", async ({ page }) => {
   test.skip(process.env.ENV !== "production", "Only runs against production");
 
   await page.goto("/prod-feature");
@@ -61,16 +57,16 @@ test("not on CI", async ({ page }) => {
 ```typescript
 test.describe("Admin features", () => {
   test.skip(
-    ({ browserName }) => browserName === "firefox",
-    "Firefox admin bug",
+    () => process.env.ENV !== "test",
+    "Only runs in test environment",
   );
 
   test("admin dashboard", async ({ page }) => {
-    // Skipped in Firefox
+    // Skipped outside test env
   });
 
   test("admin settings", async ({ page }) => {
-    // Skipped in Firefox
+    // Skipped outside test env
   });
 });
 ```
@@ -106,8 +102,8 @@ test("known bug", async ({ page }) => {
 });
 
 // Conditional fail
-test("fails on webkit", async ({ page, browserName }) => {
-  test.fail(browserName === "webkit", "WebKit rendering bug #456");
+test("known rendering bug", async ({ page }) => {
+  test.fail(process.env.ENV === "dev", "Rendering bug in dev environment #456");
 
   await page.goto("/render-test");
   await expect(page.getByTestId("element")).toHaveCSS("width", "100px");
@@ -139,10 +135,10 @@ test("large data import", async ({ page }) => {
 });
 
 // Conditional slow
-test("video processing", async ({ page, browserName }) => {
-  test.slow(browserName === "webkit", "WebKit video processing is slow");
+test("heavy data processing", async ({ page }) => {
+  test.slow(process.env.ENV === "scale", "Scale environment has larger datasets");
 
-  await page.goto("/video-editor");
+  await page.goto("/data-processing");
 });
 ```
 

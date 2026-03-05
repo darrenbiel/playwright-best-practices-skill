@@ -388,4 +388,3 @@ test("handles camera access error", async ({ page }) => {
 ## Related References
 
 - **Fixtures**: See [fixtures-hooks.md](fixtures-hooks.md) for context fixtures
-- **Mobile**: See [mobile-testing.md](mobile-testing.md) for device emulation
