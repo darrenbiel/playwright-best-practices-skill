@@ -4,95 +4,136 @@
 ░█▀▀░█░░░█▀█░░█░░█▄█░█▀▄░░█░░█░█░█▀█░░█░░░░█▀▄░█▀▀░▀▀█░░█░░░░█▀▀░█▀▄░█▀█░█░░░░█░░░█░░█░░░█▀▀░▀▀█░
 ░▀░░░▀▀▀░▀░▀░░▀░░▀░▀░▀░▀░▀▀▀░▀▀▀░▀░▀░░▀░░░░▀▀░░▀▀▀░▀▀▀░░▀░░░░▀░░░▀░▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀▀▀░▀▀▀░
 ```
-<img src="https://currents.dev/favicon-96x96.png" width="24" height="24" align="left" />by [currents.dev](https://currents.dev?utm_source=ai-skill) - The all-in-one Dashboard for Playwright Testing.
 
-# Playwright Best Practices Skill
+# Playwright Best Practices Skill (Skyline / SystemLink)
 
-A skill that gives the AI specialized guidance for writing, debugging, and maintaining **Playwright** tests in **TypeScript**. Use it in any repo where you work with Playwright so the assistant follows best practices for E2E, component, API, visual regression, accessibility, security, i18n, Electron, and browser extension testing.
+A customized fork of the [currents.dev Playwright Best Practices Skill](https://github.com/currents-dev/playwright-best-practices-skill), tailored for the **Skyline (SystemLink)** codebase.
 
-## Installation
+This skill gives the AI specialized guidance for writing, debugging, and maintaining Playwright tests in TypeScript, with codebase-specific patterns for:
 
-```bash
-npx skills add https://github.com/currents-dev/playwright-best-practices-skill
+- End2EndTests (smoke + user journey projects)
+- Web/Workspaces acceptance tests (17 apps with fake API servers)
+- Custom web components (`nimble-*`, `sl-*`)
+- Azure DevOps CI pipelines
+- Cookie-based authentication
+- OpenTelemetry-instrumented test imports
+
+## Skyline Customizations
+
+See [CHANGES.md](CHANGES.md) for a detailed description of all modifications made to the original skill.
+
+Key changes:
+- **Added** `skyline-conventions.md` — central reference for codebase-specific patterns
+- **Removed** 12 irrelevant reference files (mobile, electron, extensions, canvas, service workers, component testing, performance testing, security testing, coverage, websockets, i18n, ci-cd)
+- **Modified** 6 reference files with Skyline-specific notes and examples
+- **Rewrote** `SKILL.md` with updated activity tables and decision tree
+
+## Integration with Skyline2
+
+This repo is embedded in the Skyline2 monorepo as a **git subtree** at:
+
+```
+.github/skills/skyline-playwright-best-practices/
 ```
 
-The skill is activity-based: the AI is directed to the right reference depending on what you're doing, so you get focused advice without loading everything at once.
+The `skyline-customization` branch is the source of truth.
 
-## When the Skill Is Used
+## Contributing
 
-The skill triggers when the AI infers you need help with things like:
+### Source of truth
 
-- Writing new E2E, component, API, visual regression, or accessibility tests
-- Testing mobile/responsive layouts, touch gestures, or device emulation
-- Implementing file uploads/downloads, date/time mocking, or WebSocket testing
-- Handling OAuth popups, geolocation, permissions, or multi-tab flows
-- Testing iframes, canvas/WebGL, service workers, or PWA features
-- Testing Electron desktop apps or browser extensions
-- Internationalization (i18n), locales, RTL layouts, or date/number formats
-- Testing error states, offline mode, or network failure scenarios
-- Security testing (XSS, CSRF, authentication, authorization)
-- Performance testing with Web Vitals or Lighthouse
-- Reviewing or refactoring Playwright test code
-- Fixing flaky tests or debugging failures
-- Setting up CI/CD, test coverage, or global setup/teardown
-- Configuring projects, dependencies, parallel runs, or sharding
+The **fork** (this repo, branch `skyline-customization`) is the source of truth. Make edits here, then sync to Skyline2.
 
-You don't have to mention "skill" or "Playwright best practices"; describe your task (e.g. "fix this flaky login test" or "add accessibility tests") and the AI will use the skill when it's relevant.
+### Making changes
+
+1. Clone this repo and check out the `skyline-customization` branch:
+   ```bash
+   git clone https://github.com/darrenbiel/playwright-best-practices-skill.git
+   cd playwright-best-practices-skill
+   git checkout skyline-customization
+   ```
+
+2. Make your edits (add/modify reference files, update SKILL.md, etc.)
+
+3. Commit with a descriptive message and push:
+   ```bash
+   git add -A
+   git commit -m "Update locators.md with new nimble component patterns"
+   git push origin skyline-customization
+   ```
+
+4. Sync to Skyline2 by running this from the Skyline2 repo root:
+   ```bash
+   git subtree pull --prefix=.github/skills/skyline-playwright-best-practices \
+     https://github.com/darrenbiel/playwright-best-practices-skill.git \
+     skyline-customization --squash
+   ```
+   This creates a merge commit in Skyline2 with the latest fork content.
+
+### Quick fixes directly in Skyline2
+
+If you need to make a quick fix directly in the monorepo, edit the files under `.github/skills/skyline-playwright-best-practices/` and commit normally. To push changes back to the fork:
+
+```bash
+git subtree push --prefix=.github/skills/skyline-playwright-best-practices \
+  https://github.com/darrenbiel/playwright-best-practices-skill.git \
+  skyline-customization
+```
+
+> **Note:** `subtree push` walks the full Skyline2 history to extract changes, which can be slow. Prefer making changes in the fork when possible.
+
+### Important guidelines
+
+- Always update `skyline-conventions.md` when codebase patterns change (e.g., new custom elements, auth changes, new linting rules)
+- When removing a reference file, search for and update all cross-references in other files and SKILL.md
+- Update CHANGES.md when making significant modifications
 
 ## What's Inside
 
+### Skyline-Specific
+
+| Topic                | Reference                | Use for                                             |
+| -------------------- | ------------------------ | --------------------------------------------------- |
+| Codebase conventions | `skyline-conventions.md` | **Read first.** Imports, locators, auth, config, tags |
+
 ### Core Testing
 
-| Topic                | Reference               | Use for                                           |
-| -------------------- | ----------------------- | ------------------------------------------------- |
-| Debugging            | `debugging.md`          | Trace viewer, inspector, common issues            |
-| Flaky tests          | `flaky-tests.md`        | Detection, diagnosis, fixing, quarantine          |
-| Test organization    | `test-organization.md`  | Structure, config, E2E/component/API/visual tests |
-| Locators             | `locators.md`           | Selectors, robustness, avoiding brittle locators  |
-| Assertions & waiting | `assertions-waiting.md` | Expect APIs, auto-waiting, polling                |
-| Page Object Model    | `page-object-model.md`  | POM structure and patterns                        |
-| Fixtures & hooks     | `fixtures-hooks.md`     | Setup, teardown, auth, custom fixtures            |
-| Test data            | `test-data.md`          | Factories, Faker, data-driven testing             |
-| Annotations          | `annotations.md`        | skip, fixme, slow, test steps                     |
+| Topic                | Reference               | Use for                                          |
+| -------------------- | ----------------------- | ------------------------------------------------ |
+| Debugging            | `debugging.md`          | Trace viewer, inspector, common issues           |
+| Flaky tests          | `flaky-tests.md`        | Detection, diagnosis, fixing, quarantine         |
+| Test organization    | `test-organization.md`  | Structure, config, E2E/API tests                 |
+| Locators             | `locators.md`           | Selectors, custom elements, shadow DOM           |
+| Assertions & waiting | `assertions-waiting.md` | Expect APIs, auto-waiting, polling               |
+| Page Object Model    | `page-object-model.md`  | POM structure, composition patterns              |
+| Fixtures & hooks     | `fixtures-hooks.md`     | Setup, teardown, auth, custom fixtures           |
+| Test data            | `test-data.md`          | Factories, Faker, data-driven testing            |
+| Annotations          | `annotations.md`        | skip, fixme, slow, test steps, ProductAreaTags   |
 
 ### Specialized Testing
 
-| Topic               | Reference                | Use for                                        |
-| ------------------- | ------------------------ | ---------------------------------------------- |
-| Accessibility       | `accessibility.md`       | Axe-core, keyboard nav, ARIA, focus management |
-| Mobile testing      | `mobile-testing.md`      | Device emulation, touch gestures, viewports    |
-| Component testing   | `component-testing.md`   | CT setup, mounting, props, mocking             |
-| File operations     | `file-operations.md`     | Upload, download, drag-and-drop                |
-| Clock mocking       | `clock-mocking.md`       | Date/time mocking, timezones, timers           |
-| WebSockets          | `websockets.md`          | Real-time testing, SSE, reconnection           |
-| Browser APIs        | `browser-apis.md`        | Geolocation, permissions, clipboard, camera    |
-| Multi-context       | `multi-context.md`       | Popups, new tabs, OAuth flows                  |
-| Multi-user          | `multi-user.md`          | Collaboration, RBAC, concurrent actions        |
-| iFrames             | `iframes.md`             | Cross-origin, nested, dynamic iframes          |
-| Canvas/WebGL        | `canvas-webgl.md`        | Canvas testing, charts, WebGL, games           |
-| Service workers     | `service-workers.md`     | PWA, caching, offline, push notifications      |
-| i18n                | `i18n.md`                | Locales, RTL, date/number formats              |
-| Electron            | `electron.md`            | Desktop apps, IPC, main/renderer process       |
-| Browser extensions  | `browser-extensions.md`  | Popup, background, content scripts, APIs       |
-| Error testing       | `error-testing.md`       | Error boundaries, offline, network failures    |
-| Security testing    | `security-testing.md`    | XSS, CSRF, auth security, authorization        |
-| Performance testing | `performance-testing.md` | Web Vitals, budgets, Lighthouse                |
+| Topic            | Reference            | Use for                                        |
+| ---------------- | -------------------- | ---------------------------------------------- |
+| Accessibility    | `accessibility.md`   | Axe-core, keyboard nav, ARIA, focus management |
+| File operations  | `file-operations.md` | Upload, download, drag-and-drop                |
+| Clock mocking    | `clock-mocking.md`   | Date/time mocking, timezones, timers           |
+| Browser APIs     | `browser-apis.md`    | Geolocation, permissions, clipboard            |
+| Multi-context    | `multi-context.md`   | Popups, new tabs, OAuth flows                  |
+| Multi-user       | `multi-user.md`      | Collaboration, RBAC, concurrent actions        |
+| iFrames          | `iframes.md`         | Cross-origin, nested, dynamic iframes          |
+| Error testing    | `error-testing.md`   | Error boundaries, offline, network failures    |
 
 ### Infrastructure & Advanced
 
 | Topic            | Reference                  | Use for                                 |
 | ---------------- | -------------------------- | --------------------------------------- |
-| CI/CD            | `ci-cd.md`                 | Pipelines, sharding, Docker             |
-| Performance      | `performance.md`           | Parallel runs, optimization             |
+| Performance      | `performance.md`           | Parallel runs, sharding, optimization   |
 | Global setup     | `global-setup.md`          | globalSetup/Teardown, DB migrations     |
 | Projects         | `projects-dependencies.md` | Project config, dependencies, filtering |
-| Test coverage    | `test-coverage.md`         | V8 coverage, reports, thresholds, CI    |
 | Network advanced | `network-advanced.md`      | GraphQL, HAR, request modification      |
-| Third-party      | `third-party.md`           | OAuth, payments, email/SMS mocking      |
+| Third-party      | `third-party.md`           | OAuth, SSO mocking                      |
 | Console errors   | `console-errors.md`        | Capturing and failing on JS errors      |
-
-The skill's `SKILL.md` maps your current activity to these references so the right content is used in context.
 
 ## License
 
-MIT
+MIT — Original skill by [currents.dev](https://currents.dev), customized for Skyline/SystemLink.
