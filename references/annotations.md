@@ -1,5 +1,7 @@
 # Test Annotations & Organization
 
+> **Skyline-specific**: The Skyline End2EndTests use `ProductAreaTags` enum values in `test.describe()` block names for test categorization. See [skyline-conventions.md](skyline-conventions.md) for the full tag list and filtering patterns.
+
 ## Table of Contents
 
 1. [Skip Annotations](#skip-annotations)
@@ -387,25 +389,19 @@ test("production check", async ({ page }) => {
 ### Describe-Level Conditions
 
 ```typescript
-test.describe("Mobile features", () => {
-  test.beforeEach(({ isMobile }) => {
-    test.skip(!isMobile, "Mobile only tests");
+// Skip tests based on environment
+test.describe("Staging-only features", () => {
+  test.beforeEach(() => {
+    test.skip(process.env.ENV !== "staging", "Staging only tests");
   });
 
-  test("touch gestures", async ({ page }) => {
-    // Only runs on mobile
+  test("staging feature", async ({ page }) => {
+    // Only runs against staging
   });
 });
+```
 
-test.describe("Desktop features", () => {
-  test.beforeEach(({ isMobile }) => {
-    test.skip(isMobile, "Desktop only tests");
-  });
-
-  test("hover interactions", async ({ page }) => {
-    // Only runs on desktop
-  });
-});
+> **Skyline note**: The codebase is Chromium-only (Desktop Chrome), so browser-specific or mobile-specific conditional annotations are not applicable. Use `test.skip()` with environment conditions instead.
 ```
 
 ## Anti-Patterns to Avoid
