@@ -30,23 +30,23 @@ Key changes:
 
 ## Integration with Skyline
 
-This repo is embedded in the Skyline monorepo as a **git subtree** at:
+The [fork repo](https://github.com/darrenbiel/playwright-best-practices-skill) is embedded in the Skyline monorepo as a **git subtree** at:
 
 ```
 .github/skills/skyline-playwright-best-practices/
 ```
 
-This repo's `skyline-customization` branch is the source of truth.
+The fork's `skyline-customization` branch is the source of truth.
 
 ## Contributing
 
 ### Source of truth
 
-This fork repo (branch `skyline-customization`) is the source of truth. Make edits here, then sync to Skyline.
+The [fork repo](https://github.com/darrenbiel/playwright-best-practices-skill) (branch `skyline-customization`) is the source of truth. Make edits there, then sync to Skyline.
 
-### Making changes (in this fork)
+### Making changes
 
-1. Clone this fork and check out the `skyline-customization` branch:
+1. Clone the fork and check out the `skyline-customization` branch:
    ```bash
    git clone https://github.com/darrenbiel/playwright-best-practices-skill.git
    cd playwright-best-practices-skill
@@ -72,7 +72,7 @@ This fork repo (branch `skyline-customization`) is the source of truth. Make edi
 
 ### Quick fixes directly in Skyline
 
-If you need to make a quick fix directly in the Skyline monorepo, edit the files under `.github/skills/skyline-playwright-best-practices/` and commit normally. To push those changes back to this fork:
+If you need to make a quick fix directly in the Skyline monorepo, edit the files under `.github/skills/skyline-playwright-best-practices/` and commit normally. To push those changes back to the fork:
 
 ```bash
 git subtree push --prefix=.github/skills/skyline-playwright-best-practices \
