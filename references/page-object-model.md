@@ -1,5 +1,7 @@
 # Page Object Model (POM)
 
+> **Skyline-specific**: The Skyline codebase uses **composition over inheritance** for page objects — there is no `BasePage` abstract class. Page objects take `Page` in the constructor and compose component objects as needed. See [skyline-conventions.md](skyline-conventions.md) for naming conventions (`*.page.ts`), custom element locator patterns, and real examples from the codebase.
+
 ## Table of Contents
 
 1. [Overview](#overview)
@@ -177,6 +179,8 @@ export class DashboardPage {
 
 ### Page Navigation
 
+> **Skyline note**: The Skyline codebase does **not** use the `BasePage` abstract class pattern shown below. Instead, page objects are standalone classes that take `Page` in the constructor. The `BasePage` pattern is shown here as a generic reference only.
+
 ```typescript
 // pages/base.page.ts
 import { Page } from "@playwright/test";
@@ -313,3 +317,4 @@ test("can login", async ({ loginPage }) => {
 - **Locator strategies**: See [locators.md](locators.md) for selecting elements
 - **Fixtures**: See [fixtures-hooks.md](fixtures-hooks.md) for advanced fixture patterns
 - **Test organization**: See [test-organization.md](test-organization.md) for structuring test suites
+- **Skyline conventions**: See [skyline-conventions.md](skyline-conventions.md) for codebase page object patterns
