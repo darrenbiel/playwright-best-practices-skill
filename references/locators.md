@@ -1,12 +1,14 @@
 # Locator Strategies
 
+> **Skyline-specific**: The Skyline UI uses custom web components (`nimble-*`, `sl-*`) extensively. Playwright pierces shadow DOM automatically, but you should prefer `page.locator('nimble-text-field')` or role-based locators over CSS class selectors for these elements. See [skyline-conventions.md](skyline-conventions.md) for the codebase-specific locator priority and real examples.
+
 ## Table of Contents
 
 1. [Priority Order](#priority-order)
 2. [User-Facing Locators](#user-facing-locators)
 3. [Filtering & Chaining](#filtering--chaining)
 4. [Dynamic Content](#dynamic-content)
-5. [Shadow DOM](#shadow-dom)
+5. [Shadow DOM & Custom Elements](#shadow-dom--custom-elements)
 6. [Iframes](#iframes)
 
 ## Priority Order
@@ -174,7 +176,7 @@ for (const item of items) {
 }
 ```
 
-## Shadow DOM
+## Shadow DOM & Custom Elements
 
 Playwright pierces shadow DOM by default:
 
@@ -185,6 +187,28 @@ page.getByRole("button", { name: "Shadow Button" });
 // Explicit shadow DOM traversal (if needed)
 page.locator("my-component").locator("internal:shadow=button");
 ```
+
+### Skyline Custom Elements
+
+The Skyline UI uses NI custom elements (`nimble-*`, `sl-*`) which render inside shadow DOM. Playwright pierces these automatically, so prefer:
+
+```typescript
+// Preferred: role-based (works through shadow DOM)
+page.getByRole('textbox', { name: 'System name' });
+
+// Also good: tag-based for specific nimble elements
+page.locator('nimble-text-field');
+page.locator('nimble-menu-button');
+page.locator('sl-drawer');
+
+// Filter within custom elements
+page.locator('nimble-table-row').filter({ hasText: 'My Item' });
+
+// Avoid: CSS classes on internal shadow DOM elements
+// page.locator('.ni-internal-class')  // fragile!
+```
+
+See [skyline-conventions.md](skyline-conventions.md) for the full custom element locator priority.
 
 ## Iframes
 
@@ -240,3 +264,4 @@ const exists = (await page.getByRole("button").count()) > 0;
 - **Debugging selector issues**: See [debugging.md](debugging.md) for troubleshooting
 - **Waiting for elements**: See [assertions-waiting.md](assertions-waiting.md) for waiting strategies
 - **Using in Page Objects**: See [page-object-model.md](page-object-model.md) for organizing locators
+- **Skyline conventions**: See [skyline-conventions.md](skyline-conventions.md) for custom element locator patterns
