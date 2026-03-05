@@ -1,5 +1,7 @@
 # Fixtures & Hooks
 
+> **Skyline-specific**: The Skyline codebase uses an **instrumented `test` import** (wrapping Playwright's `test` with OpenTelemetry tracing) — you must import `test` from `tests/shared/instrumentation/test.js`, not from `@playwright/test`. This is enforced by eslint. Additionally, Skyline uses **cookie-based authentication** via `Utils.addSessionCookies(context)`, not Playwright `storageState` files. See [skyline-conventions.md](skyline-conventions.md) for details.
+
 ## Table of Contents
 
 1. [Built-in Fixtures](#built-in-fixtures)
@@ -241,6 +243,8 @@ test.describe("User Management", () => {
 
 ### Global Setup with Storage State
 
+> **Skyline note**: The Skyline End2EndTests do **not** use Playwright's `storageState` files for authentication. Instead they use cookie-based auth via `Utils.addSessionCookies(context)`. The `storageState` pattern below is shown as a generic Playwright reference. See [skyline-conventions.md](skyline-conventions.md) for actual auth patterns.
+
 ```typescript
 // auth.setup.ts
 import { test as setup, expect } from "@playwright/test";
@@ -415,3 +419,4 @@ export const test = base.extend<TestData>({
 - **Page Objects with fixtures**: See [page-object-model.md](page-object-model.md) for POM patterns
 - **Test organization**: See [test-organization.md](test-organization.md) for test structure
 - **Debugging fixture issues**: See [debugging.md](debugging.md) for troubleshooting
+- **Skyline conventions**: See [skyline-conventions.md](skyline-conventions.md) for instrumented test import and auth patterns
