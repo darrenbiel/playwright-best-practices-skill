@@ -1,15 +1,19 @@
 # CI/CD Integration
 
+> **Skyline-specific**: The Skyline codebase uses **Azure DevOps (AzDO) pipelines**, not GitHub Actions. Tests run inside Docker containers. Artifacts are stored in AWS. The GitHub Actions examples below are kept as general Playwright CI reference, but do not apply directly to Skyline's pipeline setup. See [skyline-conventions.md](skyline-conventions.md) for actual CI patterns.
+
 ## Table of Contents
 
-1. [GitHub Actions](#github-actions)
+1. [GitHub Actions (General Reference)](#github-actions-general-reference)
 2. [Docker](#docker)
 3. [Reporting](#reporting)
 4. [Sharding](#sharding)
 5. [Environment Management](#environment-management)
 6. [Caching](#caching)
 
-## GitHub Actions
+## GitHub Actions (General Reference)
+
+> **Note**: Skyline uses Azure DevOps, not GitHub Actions. These examples are kept as general Playwright CI reference.
 
 ### Basic Workflow
 
@@ -239,12 +243,15 @@ export default defineConfig({
 ### CI-Specific Reporter
 
 ```typescript
+// General CI reporter pattern
 export default defineConfig({
   reporter: process.env.CI
-    ? [["github"], ["blob"], ["html"]]
+    ? [["blob"], ["html"]]
     : [["list"], ["html"]],
 });
 ```
+
+> **Skyline note**: End2EndTests use a custom reporter configured in the Playwright config. The `github` reporter is not used since CI is Azure DevOps.
 
 ## Sharding
 
@@ -384,12 +391,11 @@ test("login", async ({ page }) => {
 // playwright.config.ts - CI optimized
 export default defineConfig({
   testDir: "./tests",
-  fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI
-    ? [["github"], ["blob"], ["html"]]
+    ? [["blob"], ["html"]]
     : [["list"], ["html"]],
   use: {
     baseURL: process.env.BASE_URL || "http://localhost:3000",
@@ -399,6 +405,8 @@ export default defineConfig({
   },
 });
 ```
+
+> **Skyline note**: The codebase does NOT use `fullyParallel: true` in CI configs. The `github` reporter is not applicable. See [skyline-conventions.md](skyline-conventions.md) for actual config patterns.
 
 ## Related References
 
